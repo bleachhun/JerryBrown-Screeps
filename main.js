@@ -12,8 +12,11 @@ var BUILDER_MIN_COUNT = 2;
 var contractors = [];
 var CONTRACTOR_MIN_COUNT = 2;
 
-var guards = [];
-var GUARD_MIN_COUNT = 2;
+var meleeGuards = [];
+var MELEE_GUARD_MIN_COUNT = 2;
+
+var rangedGuards = [];
+var RANGED_GUARD_MIN_COUNT = 4;
 
 var claimers = [];
 var CLAIMER_MIN_COUNT = 2;
@@ -30,9 +33,12 @@ for (var name in Game.creeps) {
         } else if (creep.memory.role == "contractor") {
             if (!creep.memory.paused) builder(creep);
             contractors.push(creep);
-        } else if (creep.memory.role == "guard") {
+        } else if (creep.memory.role == "meleeGuard") {
             if (!creep.memory.paused) guard(creep);
-            guards.push(creep);
+            meleeGuards.push(creep);
+        } else if (creep.memory.role == "rangedGuard") {
+            if (!creep.memory.paused) guard(creep);
+            rangedGuards.push(creep);
         } else if (creep.memory.role == "claimer") {
            if (!creep.memory.paused) claimer(creep);
            claimers.push(creep);
@@ -76,7 +82,7 @@ var spawnQueue = {
         this.queue_ = [];
     },
 
-    spawn: function(body) {
+    spawn: function() {
         if (this.queue_.length > 0) {
             // Get the item at the top of the queue by reversing the queue,
             // popping, and reversing back to the original order
@@ -85,6 +91,9 @@ var spawnQueue = {
             this.queue_.reverse();
 
             var creepID = Math.floor((Math.random() * 1000000) + 1);
+            var generalBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
+            var meleeGuardBody = [ATTACK, ATTCK, ATTACK, MOVE, MOVE, MOVE];
+            var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTCK, RANGED_ATTACK, MOVE, MOVE, MOVE];
             switch (role) {
                 case "harvester":
                     return Game.spawns.Spawn1.createCreep(body, "harvester_"+creepID, {role: "harvester"});
@@ -99,7 +108,15 @@ var spawnQueue = {
                     break;
 
                 case "builder":
-                    return Game.spawns.Spawn1.createCreep(body, "builder_"+creepID, {role: "builder", buildOnly: true, task: "idle" });
+                    return Game.spawns.Spawn1.createCreep(body, "builder_"+creepID, {role: "builder", buildOnly: true, task: "idle"});
+                    break;
+
+                case "meleeGuard":
+                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "melee_"+creepID, {role: "meleeGuard"});
+                    break;
+
+                case "rangedGuard":
+                    return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard"});
                     break;
 
                 default:
@@ -121,6 +138,14 @@ if (harvesters.length < HARVESTER_MIN_COUNT) {
     spawnQueue.addSpawn("harvester");
 }
 
+if (meleeGuards.length < MELEE_GUARD_MIN_COUNT) {
+    spawnQueue.addSpawn("meleeGuard");
+}
+
+if (rangedGuards.length < RANGED_GUARD_MIN_COUNT) {
+    spawnQueue.addSpawn("rangedGuard");
+}
+
 if (builders.length < BUILDER_MIN_COUNT) {
     spawnQueue.addSpawn("builder");
 }
@@ -133,5 +158,5 @@ if (claimers.length < CLAIMER_MIN_COUNT) {
     spawnQueue.addSpawn("claimer");
 }
 
-var result = spawnQueue.spawn([WORK, WORK, CARRY, CARRY, MOVE, MOVE]);
+var result = spawnQueue.spawn();
 //console.log(result);
