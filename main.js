@@ -92,8 +92,8 @@ var spawnQueue = {
 
             var creepID = Math.floor((Math.random() * 1000000) + 1);
             var generalBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
-            var meleeGuardBody = [ATTACK, ATTCK, ATTACK, MOVE, MOVE, MOVE];
-            var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTCK, RANGED_ATTACK, MOVE, MOVE, MOVE];
+            var meleeGuardBody = [ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE];
+            var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE];
             switch (role) {
                 case "harvester":
                     return Game.spawns.Spawn1.createCreep(body, "harvester_"+creepID, {role: "harvester"});
