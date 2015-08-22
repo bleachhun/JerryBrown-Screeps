@@ -22,19 +22,19 @@ for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     if (creep.ticksToLive != 0) {
         if (creep.memory.role == "harvester") {
-            harvester(creep);
+            if (!creep.memory.paused) harvester(creep);
             harvesters.push(creep);
         } else if (creep.memory.role == "builder") {
-            builder(creep);
+            if (!creep.memory.paused) builder(creep);
             builders.push(creep);
         } else if (creep.memory.role == "contractor") {
-            builder(creep);
+            if (!creep.memory.paused) builder(creep);
             contractors.push(creep);
         } else if (creep.memory.role == "guard") {
-            guard(creep);
+            if (!creep.memory.paused) guard(creep);
             guards.push(creep);
         } else if (creep.memory.role == "claimer") {
-           claimer(creep);
+           if (!creep.memory.paused) claimer(creep);
            claimers.push(creep);
         }
     }
