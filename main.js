@@ -126,5 +126,5 @@ if (claimers.length < CLAIMER_MIN_COUNT) {
     spawnQueue.addSpawn("claimer");
 }
 
-var result = spawnQueue.spawn([WORK, CARRY, MOVE]);
+var result = spawnQueue.spawn([WORK, WORK, CARRY, CARRY, MOVE, MOVE]);
 //console.log(result);
