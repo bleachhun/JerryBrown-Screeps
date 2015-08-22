@@ -110,6 +110,13 @@ var spawnQueue = {
     }
 };
 
+if (harvesters.length == 0) {
+    // Bad times. Gotta get a new one.
+    if (builders.length > 0) builders[0].memory.role = "harvester";
+    else if (contractors.length > 0) contractors[0].memory.role = "harvester";
+    else if (claimers.length > 0) claimers[0].memory.role = "harvester";
+}
+
 if (harvesters.length < HARVESTER_MIN_COUNT) {
     spawnQueue.addSpawn("harvester");
 }
