@@ -57,7 +57,7 @@ module.exports = function (creep) {
     
     if (creep.carry.energy == 0) {
         creep.memory.task = "refill";
-    } else {
+    } else if (creep.carry.energy == creep.carryCapacity) {
         var myStructures = creep.room.find(FIND_STRUCTURES);
         var structureToRepair = null;
         for (var index in myStructures) {
