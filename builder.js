@@ -7,7 +7,7 @@ module.exports = function (creep) {
     }
     
     function build(creep) {
-        var site = creep.pos.findClosest(FIND_CONSTRUCTION_SITES, {filter:repairFilter});
+        var site = creep.pos.findClosest(FIND_CONSTRUCTION_SITES);
         if (site != null) {
             creep.moveTo(site);
             creep.build(site);
@@ -18,7 +18,7 @@ module.exports = function (creep) {
     }
     
     function repair(creep) {
-        var structure = Game.getObjectById(creep.memory.structureId);
+        var structure = Game.getObjectById(creep.memory.structureId, {filter:repairFilter});
         if (structure != null) {
             creep.moveTo(structure);
             creep.repair(structure);
