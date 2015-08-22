@@ -96,19 +96,19 @@ var spawnQueue = {
             var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE];
             switch (role) {
                 case "harvester":
-                    return Game.spawns.Spawn1.createCreep(body, "harvester_"+creepID, {role: "harvester"});
+                    return Game.spawns.Spawn1.createCreep(generalBody, "harvester_"+creepID, {role: "harvester"});
                     break;
 
                 case "claimer":
-                    return Game.spawns.Spawn1.createCreep(body, "claimer_"+creepID, {role: "claimer"});
+                    return Game.spawns.Spawn1.createCreep(generalBody, "claimer_"+creepID, {role: "claimer"});
                     break;
 
                 case "contractor":
-                    return Game.spawns.Spawn1.createCreep(body, "contractor_"+creepID, {role: "contractor", task: "idle"});
+                    return Game.spawns.Spawn1.createCreep(generalBody, "contractor_"+creepID, {role: "contractor", task: "idle"});
                     break;
 
                 case "builder":
-                    return Game.spawns.Spawn1.createCreep(body, "builder_"+creepID, {role: "builder", buildOnly: true, task: "idle"});
+                    return Game.spawns.Spawn1.createCreep(generalBody, "builder_"+creepID, {role: "builder", buildOnly: true, task: "idle"});
                     break;
 
                 case "meleeGuard":
