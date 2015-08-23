@@ -3,30 +3,31 @@ module.exports = function(creep) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    if (creep.role != "patrolGuard") {
+    if (creep.memory.role != "patrolGuard") {
         creep.moveTo(creep.memory.flag.pos.x, creep.memory.flag.pos.y);
     }
     
-    if (creep.role == "rangedGuard") {
+    if (creep.memory.role == "rangedGuard") {
         var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
         if (targets.length > 0) {
             creep.rangedMassAttack();
         }
-    } else if (creep.role == "meleeGuard") {
+    } else if (creep.memory.role == "meleeGuard") {
         var target = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
         if (target) {
             creep.moveTo(target);
             creep.attack(target);
         }
-    } else if (creep.role == "patrolGuard") {
+    } else if (creep.memory.role == "patrolGuard") {
         if (!creep.memory.targetPos) {
-            creep.memory.targetPos = new RoomPosition(creep.memory.flag.pos.x,
-                                                    creep.memory.flag.pos.y,
-                                                    creep.memory.flag.pos.roomName);
+            creep.memory.targetPos = creep.memory.flag.pos;
         } else {
-            if (creep.pos == creep.memory.targetPos) {
-                creep.memory.targetPos.x += getRandomInt(-3, 3);
-                creep.memory.targetPos.x += getRandomInt(-3, 3);
+            if (creep.pos.x == creep.memory.targetPos.x
+                && creep.pos.y == creep.memory.targetPos.y
+                && creep.pos.roomName == creep.memory.targetPos.roomName) {
+                
+                creep.memory.targetPos.x = creep.memory.flag.pos.x + getRandomInt(-3, 3);
+                creep.memory.targetPos.y = creep.memory.flag.pos.y + getRandomInt(-3, 3);
             }
         }
         creep.moveTo(creep.memory.targetPos.x, creep.memory.targetPos.y);
