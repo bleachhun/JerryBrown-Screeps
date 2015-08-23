@@ -4,7 +4,7 @@ var guard = require('guard');
 var claimer = require('claimer');
 
 var harvesters = [];
-var HARVESTER_MIN_COUNT = 4;
+var HARVESTER_MIN_COUNT = 6;
 
 var builders = [];
 var BUILDER_MIN_COUNT = 2;
