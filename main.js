@@ -64,7 +64,7 @@ function findFreeFlags(type, creeps) {
         var result = false;
         for (var i in creeps) {
             var creep = creeps[i];
-            if (creep.memory.flagName == flag.name) {
+            if (creep.memory.flag.name == flag.name) {
                 result = true;
             }
         }
