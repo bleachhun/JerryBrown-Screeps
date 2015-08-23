@@ -1,14 +1,11 @@
 module.exports = function(creep) {
-    var flags = creep.room.find(FIND_FLAGS);
-    var target;
-    for (var index in flags) {
-        var flag = flags[index];
-        if (flag.name == creep.memory.flag.name) {
-            target = flag;
-            break;
-        }
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
     }
-    if (target) creep.moveTo(target);
+
+    if (creep.role != "patrolGuard") {
+        creep.moveTo(creep.memory.flag);
+    }
     
     if (creep.role == "rangedGuard") {
         var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
@@ -21,5 +18,17 @@ module.exports = function(creep) {
             creep.moveTo(target);
             creep.attack(target);
         }
+    } else if (creep.role = "patrolGuard") {
+        if (!creep.memory.targetPos) {
+            creep.memory.targetPos = RoomPosition(creep.memory.flag.pos.x,
+                                                    creep.memory.flag.pos.y,
+                                                    creep.memory.flag.pos.roomName);
+        } else {
+            if (creep.pos == creep.memory.targetPos) {
+                creep.memory.targetPos.x += getRandomInt(-3, 3);
+                creep.memory.targetPos.x += getRandomInt(-3, 3);
+            }
+        }
+        creep.moveTo(creep.memory.targetPos);
     }
 }

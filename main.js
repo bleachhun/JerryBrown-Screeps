@@ -12,14 +12,12 @@ var BUILDER_MIN_COUNT = 2;
 var contractors = [];
 var CONTRACTOR_MIN_COUNT = 2;
 
-var meleeGuards = [];
-var MELEE_GUARD_MIN_COUNT = 2;
-
-var rangedGuards = [];
-var RANGED_GUARD_MIN_COUNT = 4;
-
 var claimers = [];
 var CLAIMER_MIN_COUNT = 2;
+
+var meleeGuards = [];
+var rangedGuards = [];
+var patrolGuards = [];
 
 for (var name in Game.creeps) {
     var creep = Game.creeps[name];
@@ -39,6 +37,9 @@ for (var name in Game.creeps) {
         } else if (creep.memory.role == "rangedGuard") {
             if (!creep.memory.paused) guard(creep);
             rangedGuards.push(creep);
+        } else if (creep.memory.role == "patrolGuard") {
+            if (!creep.memory.paused) guard(creep);
+            patrolGuards.push(creep);
         } else if (creep.memory.role == "claimer") {
            if (!creep.memory.paused) claimer(creep);
            claimers.push(creep);
@@ -48,17 +49,21 @@ for (var name in Game.creeps) {
 
 var TYPE_RANGED = "ranged";
 var TYPE_MELEE = "melee";
+var TYPE_PATROL = "melee";
 function findFlags(type) {
     var flags = [];
+    var flagColor = "";
     if (type == TYPE_RANGED) {
-        flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter:function(flag) {
-            return flag.color == COLOR_BLUE;
-        }});
+        flagColor = COLOR_BLUE;
     } else if (type == TYPE_MELEE) {
-        flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter:function(flag) {
-            return flag.color == COLOR_RED;
-        }});
+        flagColor = COLOR_RED;
+    } else if (type == TYPE_PATROL) {
+        flagColor = COLOR_GREEN;
     }
+
+    flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter: function(flag) {
+        return flag.color == flagColor;
+    }});
     return flags;
 }
 
@@ -160,6 +165,16 @@ var spawnQueue = {
                     return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard", flag: flagName});
                     break;
 
+                case "patrolGuard":
+                    var freeFlags = findFreeFlags(TYPE_PATROL, patrolGuards);
+                    var flagName = "";
+                    if (freeFlags[0]) {
+                        flagName = freeFlags[0];
+                    }
+
+                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "patrol_"+creepID, {role: "patrolGuard", flag: flagName});
+                    break;
+
                 default:
                     console.log("Unexpected role '"+role+"' on queue");
                     break;
@@ -185,6 +200,10 @@ if (findFreeFlags(TYPE_MELEE, meleeGuards).length > 0) {
 
 if (findFreeFlags(TYPE_RANGED, rangedGuards).length > 0) {
     spawnQueue.addSpawn("rangedGuard");
+}
+
+if (findFreeFlags(TYPE_PATROL, patrolGuards).length > 0) {
+    spawnQueue.addSpawn("patrolGuard");
 }
 
 if (claimers.length < CLAIMER_MIN_COUNT) {
