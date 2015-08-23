@@ -3,7 +3,7 @@ module.exports = function(creep) {
     var target;
     for (var index in flags) {
         var flag = flags[index];
-        if (flag.name == creep.memory.flagName) {
+        if (flag.name == creep.memory.flag.name) {
             target = flag;
             break;
         }

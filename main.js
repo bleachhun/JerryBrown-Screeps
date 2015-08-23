@@ -46,6 +46,34 @@ for (var name in Game.creeps) {
     }
 }
 
+var TYPE_RANGED = "ranged";
+var TYPE_MELEE = "melee";
+function findFreeFlags(type, creeps) {
+    var flags;
+    if (type == TYPE_RANGED) {
+        flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter:function(flag) {
+            return flag.color == COLOR_BLUE;
+        }});
+    } else if (type == TYPE_MELEE) {
+        flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter:function(flag) {
+            return flag.color == COLOR_RED;
+        }});
+    }
+
+    flags.filter(function(flag) {
+        var result = false;
+        for (var i in creeps) {
+            var creep = creeps[i];
+            if (creep.memory.flagName == flag.name) {
+                result = true;
+            }
+        }
+        return result;
+    })
+
+    return flags;
+}
+
 function checkSpawnable(body, name) {
     var spawnable = Game.spawns.Spawn1.canCreateCreep(body, name);
     if (!spawnable) return true
@@ -93,7 +121,7 @@ var spawnQueue = {
             var creepID = Math.floor((Math.random() * 1000000) + 1);
             var generalBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
             var meleeGuardBody = [ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE];
-            var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE];
+            var rangedGuardBody = [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE];
             switch (role) {
                 case "harvester":
                     return Game.spawns.Spawn1.createCreep(generalBody, "harvester_"+creepID, {role: "harvester"});
@@ -112,11 +140,23 @@ var spawnQueue = {
                     break;
 
                 case "meleeGuard":
-                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "melee_"+creepID, {role: "meleeGuard"});
+                    var freeFlags = findFreeFlags(TYPE_MELEE, meleeGuards);
+                    var flagName = "";
+                    if (freeFlags[0]) {
+                        flagName = freeFlags[0];
+                    }
+
+                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "melee_"+creepID, {role: "meleeGuard", flag: flagName});
                     break;
 
                 case "rangedGuard":
-                    return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard"});
+                    var freeFlags = findFreeFlags(TYPE_RANGED, rangedGuards);
+                    var flagName = "";
+                    if (freeFlags[0]) {
+                        flagName = freeFlags[0];
+                    }
+
+                    return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard", flag: flagName});
                     break;
 
                 default:
