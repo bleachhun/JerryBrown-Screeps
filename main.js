@@ -49,7 +49,7 @@ for (var name in Game.creeps) {
 
 var TYPE_RANGED = "ranged";
 var TYPE_MELEE = "melee";
-var TYPE_PATROL = "melee";
+var TYPE_PATROL = "patrol";
 function findFlags(type) {
     var flags = [];
     var flagColor = "";
@@ -147,32 +147,32 @@ var spawnQueue = {
 
                 case "meleeGuard":
                     var freeFlags = findFreeFlags(TYPE_MELEE, meleeGuards);
-                    var flagName = "";
+                    var flag = "";
                     if (freeFlags[0]) {
-                        flagName = freeFlags[0];
+                        flag = freeFlags[0];
                     }
 
-                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "melee_"+creepID, {role: "meleeGuard", flag: flagName});
+                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "melee_"+creepID, {role: "meleeGuard", flag: flag});
                     break;
 
                 case "rangedGuard":
                     var freeFlags = findFreeFlags(TYPE_RANGED, rangedGuards);
-                    var flagName = "";
+                    var flag = "";
                     if (freeFlags[0]) {
-                        flagName = freeFlags[0];
+                        flag = freeFlags[0];
                     }
 
-                    return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard", flag: flagName});
+                    return Game.spawns.Spawn1.createCreep(rangedGuardBody, "ranged_"+creepID, {role: "rangedGuard", flag: flag});
                     break;
 
                 case "patrolGuard":
                     var freeFlags = findFreeFlags(TYPE_PATROL, patrolGuards);
-                    var flagName = "";
+                    var flag = "";
                     if (freeFlags[0]) {
-                        flagName = freeFlags[0];
+                        flag = freeFlags[0];
                     }
 
-                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "patrol_"+creepID, {role: "patrolGuard", flag: flagName});
+                    return Game.spawns.Spawn1.createCreep(meleeGuardBody, "patrol_"+creepID, {role: "patrolGuard", flag: flag, targetPos: {}});
                     break;
 
                 default:
