@@ -48,8 +48,8 @@ for (var name in Game.creeps) {
 
 var TYPE_RANGED = "ranged";
 var TYPE_MELEE = "melee";
-function findFreeFlags(type, creeps) {
-    var flags;
+function findFlags(type) {
+    var flags = [];
     if (type == TYPE_RANGED) {
         flags = Game.spawns.Spawn1.room.find(FIND_FLAGS, {filter:function(flag) {
             return flag.color == COLOR_BLUE;
@@ -59,19 +59,20 @@ function findFreeFlags(type, creeps) {
             return flag.color == COLOR_RED;
         }});
     }
+    return flags;
+}
 
-    flags.filter(function(flag) {
-        var result = false;
+function findFreeFlags(type, creeps) {
+    return findFlags(type).filter(function(flag) {
+        var result = true;
         for (var i in creeps) {
             var creep = creeps[i];
             if (creep.memory.flag.name == flag.name) {
-                result = true;
+                result = false;
             }
         }
         return result;
-    })
-
-    return flags;
+    });
 }
 
 function checkSpawnable(body, name) {
@@ -178,11 +179,11 @@ if (harvesters.length < HARVESTER_MIN_COUNT) {
     spawnQueue.addSpawn("harvester");
 }
 
-if (meleeGuards.length < MELEE_GUARD_MIN_COUNT) {
+if (findFreeFlags(TYPE_MELEE, meleeGuards).length > 0) {
     spawnQueue.addSpawn("meleeGuard");
 }
 
-if (rangedGuards.length < RANGED_GUARD_MIN_COUNT) {
+if (findFreeFlags(TYPE_RANGED, rangedGuards).length > 0) {
     spawnQueue.addSpawn("rangedGuard");
 }
 
