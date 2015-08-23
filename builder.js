@@ -3,7 +3,28 @@ module.exports = function (creep) {
     
     function repairFilter(object) {
         var type = object.structureType;
-        return type != "spawn" && type != STRUCTURE_CONTROLLER && (object.hits != object.hitsMax && object.hits < 50000);
+        return type != STRUCTURE_CONTROLLER && (object.hits != object.hitsMax && object.hits < maxHitsForObjectType(object.structureType));
+    }
+
+    function maxHitsForObjectType(type) {
+        var max = 0;
+        
+        switch (type) {
+            case STRUCTURE_RAMPART:
+                max = 10000;
+                break;
+            case STRUCTURE_ROAD:
+                max = 2500;
+                break;
+            case STRUCTURE_WALL:
+                max = 25000;
+                break;
+            default:
+                max = 1000;
+                break;
+        }
+
+        return max;
     }
     
     function build(creep) {
@@ -44,15 +65,12 @@ module.exports = function (creep) {
         Game.spawns.Spawn1.transferEnergy(creep);
     }
     
-    var buildOnly = creep.carry.energy == 0 ? false : creep.memory.buildOnly;
-    
-    if (creep.memory.task == "build"
-        || buildOnly) {
+    if (creep.memory.task == "refill") {
+        refill(creep);
+    } else if (creep.memory.task == "build" || creep.memory.buildOnly) {
         if (!build(creep)) repairNear(creep);
     } else if (creep.memory.task == "repair") {
         repair(creep);
-    } else if (creep.memory.task == "refill") {
-        refill(creep);
     }
     
     if (creep.carry.energy == 0) {
@@ -62,22 +80,7 @@ module.exports = function (creep) {
         var structureToRepair = null;
         for (var index in myStructures) {
             var structure = myStructures[index];
-            var max = 100;
-            
-            switch (structure.structureType) {
-                case STRUCTURE_RAMPART:
-                    max = 10000;
-                    break;
-                case STRUCTURE_ROAD:
-                    max = 2500;
-                    break;
-                case STRUCTURE_WALL:
-                    max = 25000;
-                    break;
-                default:
-                    max = 1000;
-                    break;
-            }
+            var max = maxHitsForObjectType(structure.structureType);
             
             if (structure.hits < clamp(structure.hitsMax, 0, max)) {
                 structureToRepair = structure;

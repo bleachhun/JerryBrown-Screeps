@@ -187,16 +187,16 @@ if (findFreeFlags(TYPE_RANGED, rangedGuards).length > 0) {
     spawnQueue.addSpawn("rangedGuard");
 }
 
+if (claimers.length < CLAIMER_MIN_COUNT) {
+    spawnQueue.addSpawn("claimer");
+}
+
 if (builders.length < BUILDER_MIN_COUNT) {
     spawnQueue.addSpawn("builder");
 }
 
 if (contractors.length < CONTRACTOR_MIN_COUNT) {
     spawnQueue.addSpawn("contractor");
-}
-
-if (claimers.length < CLAIMER_MIN_COUNT) {
-    spawnQueue.addSpawn("claimer");
 }
 
 var result = spawnQueue.spawn();
